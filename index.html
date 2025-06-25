@@ -1,146 +1,97 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Cestas Básicas</title>
-<style>
-:root{--pri:#007bff;--ok:#28a745;--bg:#f5f5f5;--rad:8px;--sh:0 3px 10px rgba(0,0,0,.12)}
-*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
-body{background:var(--bg)}
-header{background:var(--pri);color:#fff;padding:18px;display:flex;justify-content:space-between;align-items:center}
-header a{color:#fff;text-decoration:none;font-size:1.2rem;margin-left:20px;position:relative}
-.badge{position:absolute;top:-6px;right:-10px;background:var(--ok);padding:0 6px;border-radius:9999px;font-size:.75rem}
-.grid{max-width:1200px;margin:30px auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;padding:0 18px}
-.card{background:#fff;border-radius:var(--rad);box-shadow:var(--sh);overflow:hidden;cursor:pointer;transition:.25s}
-.card:hover{transform:translateY(-4px)}
-.card img{width:100%}
-.card h3{padding:10px;font-size:1rem}
-.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:300}
-.modal.show{display:flex}
-.box{background:#fff;padding:26px;border-radius:var(--rad);box-shadow:var(--sh);max-width:500px;width:92%;max-height:90vh;overflow:auto;position:relative}
-.close{position:absolute;top:10px;right:14px;font-size:1.5rem;border:none;background:none;cursor:pointer}
-ul{padding-left:20px;margin-top:8px}
-.controls{margin:14px 0;display:flex;align-items:center;gap:8px}
-.controls input{width:44px;text-align:center}
-.btn{display:block;width:100%;padding:12px;border:none;border-radius:var(--rad);font-weight:600;cursor:pointer;margin-top:14px}
-.btn-buy{background:var(--ok);color:#fff}
-.btn-main{background:var(--pri);color:#fff}
-#cart{position:fixed;top:0;right:-420px;width:380px;height:100%;background:#fff;box-shadow:-4px 0 14px rgba(0,0,0,.15);transition:right .35s;display:flex;flex-direction:column;z-index:200}
-#cart.open{right:0}
-.cart-h,.cart-f{padding:18px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
-.cart-items{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px}
-.cart-f{border-top:1px solid #eee;border-bottom:none;flex-direction:column;gap:16px}
-.cart-f .total{display:flex;justify-content:space-between;width:100%;font-weight:700}
-input[type=radio]{margin-right:6px}
-fieldset{border:1px solid #ddd;margin:14px 0;padding:10px;border-radius:var(--rad)}
-fieldset legend{padding:0 6px}
-fieldset.hidden{display:none}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Loja de Cestas Básicas</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 0; background: #f7f7f7; }
+    header { background: #007bff; color: #fff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+    h1 { margin: 0; font-size: 22px; }
+    .badge { background: #28a745; padding: 2px 6px; border-radius: 50%; color: #fff; font-size: 12px; margin-left: 4px; }
+    .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
+    .card { background: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,.1); overflow: hidden; cursor: pointer; }
+    .card img { width: 100%; height: 180px; object-fit: cover; }
+    .card h3 { margin: 0; padding: 10px; font-size: 18px; }
+    .modal, .login-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.5); display: none; justify-content: center; align-items: center; z-index: 10; }
+    .modal.active, .login-modal.active { display: flex; }
+    .modal-content, .login-box { background: #fff; padding: 20px; border-radius: 8px; width: 90%; max-width: 400px; max-height: 90vh; overflow-y: auto; box-shadow: 0 0 15px rgba(0,0,0,0.2); position: relative; }
+    .close { position: absolute; top: 10px; right: 15px; font-size: 20px; cursor: pointer; border: none; background: none; }
+    .btn { padding: 10px; width: 100%; border: none; background: #007bff; color: white; border-radius: 6px; font-weight: bold; margin-top: 10px; cursor: pointer; }
+    .btn:hover { background: #0056b3; }
+    input[type="text"], input[type="email"], input[type="password"] { width: 100%; padding: 10px; margin-top: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; }
+    .radio-group { margin: 10px 0; }
+    .radio-group label { margin-right: 10px; }
+  </style>
 </head>
 <body>
-<header>
-  <h1>Cestas Básicas</h1>
-  <div>
-    <a id="loginLink" href="#">👤</a>
-    <a id="cartLink" href="#">🛒<span id="badge" class="badge">0</span></a>
+  <header>
+    <h1>Loja de Cestas Básicas</h1>
+    <div>
+      <button onclick="toggleLogin()">👤</button>
+      <button onclick="toggleCart()">🛒 <span id="cartCount" class="badge">0</span></button>
+    </div>
+  </header>
+
+  <div class="container" id="productGrid"></div>
+
+  <div class="modal" id="productModal">
+    <div class="modal-content" id="productContent">
+      <button class="close" onclick="toggleModal('productModal')">×</button>
+    </div>
   </div>
-</header>
 
-<section id="grid" class="grid"></section>
-
-<!-- modal detalhe / checkout -->
-<div id="modal" class="modal"><div id="modalBox" class="box"></div></div>
-
-<!-- carrinho -->
-<aside id="cart">
-  <div class="cart-h"><h2>Carrinho</h2><button class="close" onclick="toggleCart()">×</button></div>
-  <div id="cartItems" class="cart-items"></div>
-  <div class="cart-f">
-    <div class="total"><span>Total</span><span id="cartTotal">R$ 0,00</span></div>
-    <button class="btn btn-main" onclick="checkout()">Finalizar compra</button>
+  <div class="login-modal" id="loginModal">
+    <div class="login-box">
+      <button class="close" onclick="toggleModal('loginModal')">×</button>
+      <h2>Entrar</h2>
+      <input type="email" placeholder="E-mail">
+      <input type="password" placeholder="Senha">
+      <button class="btn">Entrar</button>
+      <p style="margin-top:10px;"><a href="#">Criar cadastro</a> | <a href="#">Esqueci minha senha</a></p>
+    </div>
   </div>
-</aside>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script>
-/* ------- dados -------- */
-const FRETE = 19.90;
-const cestas = [
- {id:1,nome:"Cesta Casado",preco:89.99},
- {id:2,nome:"Cesta Solteiro",preco:79.99},
- {id:3,nome:"Cesta Dia a Dia",preco:69.99},
- {id:4,nome:"Cesta Econômica",preco:59.99},
- {id:5,nome:"Cesta Doação",preco:49.99},
- {id:6,nome:"Kit Generosidade",preco:39.99}
-];
-/* ------- helpers ------- */
-const $=s=>document.querySelector(s),fmt=v=>'R$ '+v.toFixed(2).replace('.',',');
-/* ------- estado ------- */
-let cart=[];
-/* ------- grid ------- */
-cestas.forEach(c=>{grid.insertAdjacentHTML('beforeend',
- `<div class="card" onclick="addCart(${c.id})"><img src="cesta-exemplo.jpg"><h3>${c.nome} – ${fmt(c.preco)}</h3></div>`);});
-/* ------- carrinho ------- */
-function addCart(id){
- const obj=cart.find(i=>i.id===id); obj?obj.q++:cart.push({id,q:1});
- badge.textContent=cart.reduce((s,i)=>s+i.q,0);
- renderCart(); toggleCart();
-}
-function toggleCart(){$('#cart').classList.toggle('open');renderCart();}
-function renderCart(){
- cartItems.innerHTML='';
- if(!cart.length){cartItems.innerHTML='<p>Carrinho vazio.</p>';cartTotal.textContent='R$ 0,00';return;}
- cart.forEach(i=>{
-   const c=cestas.find(x=>x.id===i.id);
-   cartItems.insertAdjacentHTML('beforeend',`<div style="display:flex;justify-content:space-between"><span>${i.q}× ${c.nome}</span><span>${fmt(i.q*c.preco)}</span></div>`);
- });
- const total=cart.reduce((s,i)=>s+i.q*cestas.find(x=>x.id===i.id).preco,0)+FRETE;
- cartTotal.textContent=fmt(total);
-}
-/* ------- checkout ------- */
-function checkout(){
- if(!cart.length){alert('Carrinho vazio');return;}
- const total=parseFloat(cartTotal.textContent.replace('R$','').replace(',','.'));
- modalBox.innerHTML=`
-  <button class="close" onclick="closeM()">×</button>
-  <h2>Pagamento</h2>
-  <p>Total a pagar: <strong>${fmt(total)}</strong> (frete ${fmt(FRETE)} incluso)</p>
-  <label><input type="radio" name="pg" value="pix" checked onchange="togglePay()"> Pix</label>
-  <label><input type="radio" name="pg" value="card" onchange="togglePay()"> Cartão</label>
+  <script>
+    const cestas = [
+      { nome: "Cesta Casado", preco: 89.99, itens: ["2x Arroz 5kg Namorado", "2x Óleo 900ml Liza", "2x Feijão 1kg Namorado", "2x Leite 1L Piracanjuba", "3x Açúcar 1kg Da Barra", "1x Macarrão Parafuso 500g Dona Benta"] },
+      { nome: "Cesta Solteiro", preco: 79.99, itens: ["1x Arroz 5kg Namorado", "1x Óleo 900ml Concordia", "1x Feijão 1kg Namorado", "2x Leite 1L Piracanjuba"] },
+      { nome: "Cesta Dia a Dia", preco: 69.99, itens: ["2x Arroz 5kg Namorado", "2x Óleo 900ml Liza", "2x Feijão 1kg Namorado", "1x Spaghetti 500g Dona Benta"] },
+      { nome: "Cesta Econômica", preco: 59.99, itens: ["1x Arroz 5kg Grão Nobre", "1x Óleo 900ml Concordia", "1x Feijão 1kg Tio Pedro", "1x Açúcar 1kg Mirante"] },
+      { nome: "Cesta Doação", preco: 49.99, itens: ["1x Arroz 5kg Grão Nobre", "1x Óleo 900ml Concordia", "1x Feijão 1kg Tio Pedro", "1x Farinha 1kg Amizade"] },
+      { nome: "Kit Generosidade", preco: 39.99, itens: ["2x Arroz 1kg Namorado", "1x Feijão 1kg Tio Pedro", "1x Óleo 900ml Concordia", "1x Açúcar 1kg Mirante"] },
+    ];
 
-  <fieldset id="pixBox"><legend>QR-Code Pix</legend><div id="qr"></div></fieldset>
+    const productGrid = document.getElementById("productGrid");
 
-  <fieldset id="cardBox" class="hidden"><legend>Dados do cartão</legend>
-     <input id="cc-num" placeholder="Número do cartão"><br>
-     <input id="cc-name" placeholder="Nome do titular"><br>
-     <input id="cc-exp" placeholder="MM/AA"><br>
-     <input id="cc-cvv" placeholder="CVV (3 ou 4)"><br>
-  </fieldset>
+    cestas.forEach((cesta, i) => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `<img src="cesta-exemplo.jpg"><h3>${cesta.nome} – R$ ${cesta.preco.toFixed(2).replace(".", ",")}</h3>`;
+      card.onclick = () => showCesta(i);
+      productGrid.appendChild(card);
+    });
 
-  <button class="btn btn-main" onclick="finalizar(${total})">Finalizar compra</button>`;
- new QRCode($('#qr'),{text:'PIX '+fmt(total),width:180,height:180});
- modal.classList.add('show');
-}
-function togglePay(){
- const pg=[...document.querySelectorAll('input[name=pg]')].find(r=>r.checked).value;
- $('#pixBox').classList.toggle('hidden',pg!=='pix');
- $('#cardBox').classList.toggle('hidden',pg!=='card');
-}
-function finalizar(total){
- const pg=[...document.querySelectorAll('input[name=pg]')].find(r=>r.checked).value;
- if(pg==='card' && !validaCartao()) return;
- cart=[];badge.textContent='0';renderCart();closeM();alert('Pedido confirmado! Valor '+fmt(total));
-}
-function validaCartao(){
- const n=$('#cc-num').value, nm=$('#cc-name').value, ex=$('#cc-exp').value, cv=$('#cc-cvv').value;
- if(!(luhn(n)&&/^[A-Za-zÀ-ÿ' ]{2,26}$/.test(nm.trim())&&/^\d{2}\/\d{2}$/.test(ex)&&/^\d{3,4}$/.test(cv))){
-   alert('Dados de cartão inválidos');return false;} return true;}
-/* ------- utils ------- */
-function luhn(v){v=v.replace(/\D/g,'');let s=0,a=false;for(let i=v.length-1;i>=0;i--){let n=parseInt(v[i]);if(a){n*=2;if(n>9)n-=9;}s+=n;a=!a;}return s%10==0;}
-function closeM(){modal.classList.remove('show');}
-modal.onclick=e=>{if(e.target.id==='modal')closeM();}
-cartLink.onclick=e=>{e.preventDefault();toggleCart();}
-</script>
+    function showCesta(index) {
+      const c = cestas[index];
+      let html = `<h2>${c.nome}</h2><ul>`;
+      c.itens.forEach(item => html += `<li>${item}</li>`);
+      html += `</ul><p><strong>R$ ${c.preco.toFixed(2).replace(".", ",")}</strong></p><button class="btn">Adicionar ao Carrinho</button>`;
+      document.getElementById("productContent").innerHTML = '<button class="close" onclick="toggleModal(\\'productModal\\')">×</button>' + html;
+      toggleModal("productModal");
+    }
+
+    function toggleModal(id) {
+      document.getElementById(id).classList.toggle("active");
+    }
+
+    function toggleCart() {
+      alert("Carrinho será adicionado aqui futuramente.");
+    }
+
+    function toggleLogin() {
+      toggleModal("loginModal");
+    }
+  </script>
 </body>
 </html>
