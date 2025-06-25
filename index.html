@@ -15,307 +15,221 @@
   --white:#fff;
   --radius:10px;
   --shadow:0 4px 12px rgba(0,0,0,.12);
-  --gray
-  --step-done: #28a745;
-  --step-pending: #ccc;
-    }
+  --gray:#6c757d;
+}
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, Helvetica, sans-serif;
-    }
+/* --------- RESET --------- */
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
 
-    body {
-      background: var(--bg);
-    }
+/* --------- LAYOUT BASE --------- */
+body{background:var(--bg);}
+header{
+  background:var(--primary);color:#fff;padding:20px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+header h1{font-size:1.4rem;font-weight:600;}
+header a{color:#fff;text-decoration:none;position:relative;margin-left:20px;font-size:1.1rem;}
+.badge{
+  position:absolute;top:-6px;right:-12px;background:var(--success);
+  padding:0 6px;border-radius:9999px;font-size:.75rem;
+}
 
-    header {
-      background: var(--primary);
-      color: #fff;
-      padding: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+/* --------- GRID DE PRODUTOS --------- */
+.container{
+  max-width:1200px;margin:30px auto;display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;padding:0 16px;
+}
+.card{
+  background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);
+  overflow:hidden;display:flex;flex-direction:column;transition:.25s;
+}
+.card:hover{transform:translateY(-6px);}
+.card img{width:100%;height:auto;display:block;}
+.card img[data-erro]{padding:40px;text-align:center;color:var(--gray);}
+.card-body{padding:18px;display:flex;flex-direction:column;flex:1;}
+.card-body h2{font-size:1.15rem;margin-bottom:6px;}
+.card-body p{font-size:.9rem;color:#555;margin:4px 0;}
+.price{color:var(--success);font-weight:700;font-size:1.05rem;margin:8px 0 10px;}
+.qty{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.qty button{
+  width:34px;height:34px;border:none;border-radius:var(--radius);
+  background:var(--primary);color:#fff;font-size:20px;cursor:pointer;
+}
+.qty input{width:44px;text-align:center;border:none;background:#eee;border-radius:var(--radius);}
+.btn-buy{
+  margin-top:auto;padding:12px;border:none;border-radius:var(--radius);
+  background:var(--success);color:#fff;font-size:1rem;font-weight:600;cursor:pointer;
+}
+.btn-buy:hover{background:#218838;}
 
-    header h1 {
-      font-size: 1.3rem;
-      font-weight: 600;
-    }
+/* --------- CARRINHO --------- */
+#cartSidebar{
+  position:fixed;top:0;right:-420px;width:400px;height:100%;
+  background:var(--white);box-shadow:-4px 0 14px rgba(0,0,0,.15);
+  transition:right .35s ease;display:flex;flex-direction:column;z-index:200;
+}
+#cartSidebar.open{right:0;}
+.cart-header, .cart-footer{padding:20px;border-bottom:1px solid #eee;}
+.cart-header{display:flex;justify-content:space-between;align-items:center;}
+.cart-items{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;}
+.cart-item{display:flex;justify-content:space-between;font-size:.9rem;}
+.cart-footer{border-top:1px solid #eee;border-bottom:none;display:flex;flex-direction:column;gap:14px;}
+.cart-footer .total{display:flex;justify-content:space-between;font-weight:700;}
+.cart-footer button{
+  padding:14px;border:none;border-radius:var(--radius);
+  background:var(--primary);color:#fff;font-weight:600;cursor:pointer;
+}
+.cart-footer button:hover{background:var(--primary-dark);}
 
-    .cart-login a {
-      color: #fff;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      position: relative;
-      font-size: 1rem;
-      margin-left: 18px;
-    }
+/* --------- MODAL --------- */
+#modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:300;}
+#modal.active{display:flex;}
+.modal-box{
+  background:var(--white);padding:32px 26px;border-radius:var(--radius);box-shadow:var(--shadow);
+  width:92%;max-width:440px;max-height:88vh;overflow-y:auto;position:relative;
+}
+.modal-box h2{margin-bottom:16px;font-size:1.25rem;text-align:center;}
+.modal-box form{display:flex;flex-direction:column;gap:14px;}
+.modal-box input, .modal-box select{
+  padding:12px;border:1px solid #ddd;border-radius:var(--radius);font-size:.95rem;
+}
+.modal-box .btn-primary{
+  padding:14px;border:none;border-radius:var(--radius);
+  background:var(--primary);color:#fff;font-weight:600;cursor:pointer;
+}
+.modal-box .btn-primary:hover{background:var(--primary-dark);}
+.close-x{
+  position:absolute;top:12px;right:16px;font-size:1.4rem;border:none;background:none;cursor:pointer;
+}
 
-    .badge {
-      position: absolute;
-      top: -6px;
-      right: -10px;
-      background: var(--success);
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      padding: 0 6px;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 20px auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 20px;
-      padding: 0 15px;
-    }
-
-    .card {
-      background: var(--white);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      transition: 0.2s;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-    }
-
-    .card img {
-      width: 100%;
-      display: block;
-    }
-
-    .card-content {
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-
-    .card-content h2 {
-      font-size: 1.1rem;
-      margin-bottom: 4px;
-    }
-
-    .card-content p {
-      font-size: 0.9rem;
-      color: #555;
-      margin: 4px 0;
-    }
-
-    .price {
-      color: var(--success);
-      font-weight: 700;
-      font-size: 1.05rem;
-      margin: 8px 0;
-    }
-
-    .qty-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 8px 0;
-    }
-
-    .qty-controls button {
-      width: 32px;
-      height: 32px;
-      border: none;
-      border-radius: var(--radius);
-      background: var(--primary);
-      color: #fff;
-      font-size: 18px;
-      cursor: pointer;
-    }
-
-    .qty-controls input {
-      width: 40px;
-      text-align: center;
-      font-size: 16px;
-      border: none;
-      background: #eee;
-      border-radius: var(--radius);
-    }
-
-    .buy-button {
-      margin-top: auto;
-      padding: 10px;
-      border: none;
-      border-radius: var(--radius);
-      background: var(--success);
-      color: #fff;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-
-    .buy-button:hover {
-      background: #218838;
-    }
-  </style>
+/* --------- STATUS --------- */
+.status-line{display:flex;justify-content:space-between;align-items:center;margin-top:20px;}
+.step{flex:none;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.8rem;color:var(--gray);max-width:70px;text-align:center;}
+.step:before{content:'';width:26px;height:26px;border-radius:50%;border:3px solid var(--step-pending);}
+.step.done{color:var(--success);}
+.step.done:before{background:var(--success);border-color:var(--success);}
+.connector{flex:1;height:3px;background:var(--step-pending);}
+.connector.done{background:var(--success);}
+</style>
 </head>
 <body>
 
+<!-- ---------- CABEÇALHO ---------- -->
 <header>
-    <h1>Cestas Básicas</h1>
-    <div class="cart-login">
-      <a id="cartLink" href="#">
-        <span style="font-size:1.2rem">🛒</span>
-        <span class="badge" id="cartBadge">0</span>
-      </a>
-      <a id="loginLink" href="#"><span style="font-size:1.2rem">👤</span></a>
-    </div>
-  </header>
-
-  <main class="container" id="grid"></main>
-
-<!-- Carrinho lateral -->
-  <aside id="cartSidebar" style="position:fixed;top:0;right:-400px;width:380px;height:100%;background:#fff;box-shadow:-4px 0 12px rgba(0,0,0,.2);transition:right .3s;display:flex;flex-direction:column;z-index:200;">
-    <div style="padding:18px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;">
-      <h2>Seu carrinho</h2>
-      <button class="close-x" onclick="toggleCart()" style="font-size:1.3rem;border:none;background:none;cursor:pointer;">×</button>
-    </div>
-    <div class="cart-items" id="cartItems" style="flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px;"></div>
-    <div class="cart-footer" style="padding:18px;border-top:1px solid #eee;display:flex;flex-direction:column;gap:12px;">
-      <div class="total" style="display:flex;justify-content:space-between;font-weight:700;font-size:1rem;">
-        <span>Total</span><span id="cartTotal">R$ 0,00</span>
-      </div>
-      <button onclick="iniciarCheckout()" style="padding:12px;border:none;border-radius:8px;background:var(--primary);color:#fff;font-weight:600;cursor:pointer;">Finalizar compra</button>
-    </div>
-  </aside>
-
-<!-- Modal -->
-  <div class="modal" id="modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:300;">
-    <div class="modal-box" id="modalBox" style="background:#fff;padding:28px 24px;border-radius:8px;max-height:90vh;overflow-y:auto;width:92%;max-width:460px;box-shadow:0 2px 10px rgba(0,0,0,.1);position:relative;"></div>
+  <h1>Cestas Básicas</h1>
+  <div>
+    <a id="loginLink" href="#">👤</a>
+    <a id="cartLink" href="#"><span>🛒</span><span class="badge" id="cartBadge">0</span></a>
   </div>
+</header>
 
-  <!-- QRCode.js para Pix -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<!-- ---------- GRID ---------- -->
+<main class="container" id="grid"></main>
 
+<!-- ---------- CARRINHO ---------- -->
+<aside id="cartSidebar">
+  <div class="cart-header">
+    <h2>Seu carrinho</h2>
+    <button class="close-x" onclick="toggleCart()">×</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer">
+    <div class="total"><span>Total</span><span id="cartTotal">R$ 0,00</span></div>
+    <button onclick="iniciarCheckout()">Finalizar compra</button>
+  </div>
+</aside>
+
+<!-- ---------- MODAL ---------- -->
+<div id="modal"><div class="modal-box" id="modalBox"></div></div>
+
+<!-- ---------- LIB QRCode ---------- -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<!-- ---------- SCRIPT PRINCIPAL ---------- -->
 <script>
-const produtos = [
-  { id: 1, nome: 'KIT GENEROSIDADE', desc: '11 itens', preco: 29.90, img: 'cesta-exemplo.jpg' },
-  { id: 2, nome: 'CESTA BÁSICA DOAÇÃO', desc: '12 itens', preco: 39.90, img: 'cesta-exemplo.jpg' },
-  { id: 3, nome: 'CESTA BÁSICA ECONÔMICA', desc: '16 itens', preco: 49.90, img: 'cesta-exemplo.jpg' },
-  { id: 4, nome: 'CESTA BÁSICA DIA A DIA', desc: '19 itens', preco: 59.90, img: 'cesta-exemplo.jpg' },
-  { id: 5, nome: 'CESTA BÁSICA SOLTEIRO', desc: '23 itens', preco: 69.90, img: 'cesta-exemplo.jpg' },
-  { id: 6, nome: 'CESTA BASICA CASADO', desc: '35 itens', preco: 89.90, img: 'cesta-exemplo.jpg' }
+/* ---------- DADOS ---------- */
+const produtos=[
+  { id: 1, nome: 'KIT GENEROSIDADE', desc: '11 itens', preco: 29.90, img: 'cesta-exemplo.png' },
+  { id: 2, nome: 'CESTA BÁSICA DOAÇÃO', desc: '12 itens', preco: 39.90, img: 'cesta-exemplo.png' },
+  { id: 3, nome: 'CESTA BÁSICA ECONÔMICA', desc: '16 itens', preco: 49.90, img: 'cesta-exemplo.png' },
+  { id: 4, nome: 'CESTA BÁSICA DIA A DIA', desc: '19 itens', preco: 59.90, img: 'cesta-exemplo.png' },
+  { id: 5, nome: 'CESTA BÁSICA SOLTEIRO', desc: '23 itens', preco: 69.90, img: 'cesta-exemplo.png' },
+  { id: 6, nome: 'CESTA BASICA CASADO', desc: '35 itens', preco: 89.90, img: 'cesta-exemplo.png' }
 ];
+let cart=[];
+let user=null;
 
-let carrinho = [];
-let usuario = null;
+/* ---------- HELPERS ---------- */
+const $=s=>document.querySelector(s);
+const fmt=v=>'R$ '+v.toFixed(2).replace('.',',');
 
-function el(s){ return document.querySelector(s) }
-function fmt(v){ return `R$ ${v.toFixed(2).replace('.', ',')}` }
-
-function montarGrid(){
-  const g = el('#grid'); g.innerHTML = '';
-  produtos.forEach(p => {
-    g.innerHTML += `
-    <div class="card">
-      <img src="${p.img}" alt="Cesta Básica">
-      <div class="card-content">
-        <h2>${p.nome}</h2>
-        <p>${p.desc}</p>
-        <p class="price">${fmt(p.preco)}</p>
-        <div class="qty-controls">
-          <button onclick="alterarQty(this, -1)">−</button>
-          <input type="text" value="1" readonly>
-          <button onclick="alterarQty(this, 1)">+</button>
-        </div>
-        <button class="buy-button" onclick="addCarrinho(${p.id}, this)">Comprar</button>
-      </div>
-    </div>`;
+/* ---------- PRODUTOS ---------- */
+function buildGrid(){
+  const g=$('#grid'); g.innerHTML='';
+  produtos.forEach(p=>{
+    const card=document.createElement('div');card.className='card';
+    card.innerHTML=`
+      <img src="${p.img}" alt="${p.nome}" onerror="this.replaceWith(document.createElement('div'))" />
+      <div class="card-body">
+        <h2>${p.nome}</h2><p>${p.desc}</p><p class="price">${fmt(p.preco)}</p>
+        <div class="qty"><button onclick="chgQty(this,-1)">-</button><input value="1" readonly><button onclick="chgQty(this,1)">+</button></div>
+        <button class="btn-buy" onclick="addCart(${p.id},this)">Comprar</button>
+      </div>`;
+    g.appendChild(card);
   });
 }
+/* qty */
+function chgQty(btn,d){const inp=btn.parentElement.querySelector('input');let v=parseInt(inp.value)||1;v+=d;if(v<1)v=1;inp.value=v;}
 
-function alterarQty(btn, dir){
-  const input = btn.parentElement.querySelector('input');
-  let v = parseInt(input.value) || 1; v += dir;
-  if (v < 1) v = 1;
-  input.value = v;
+/* ---------- CARRINHO ---------- */
+function addCart(id,btn){
+  const qty=parseInt(btn.parentElement.querySelector('input').value);
+  const it=cart.find(i=>i.id===id);
+  it?it.qty+=qty:cart.push({id,qty});
+  updateBadge();
 }
-
-function addCarrinho(id, btn){
-  const qtd = parseInt(btn.parentElement.querySelector('input').value);
-  const existe = carrinho.find(i => i.id === id);
-  if (existe) existe.qtde += qtd;
-  else carrinho.push({ id, qtde: qtd });
-  atualizarBadge();
-}
-
-function atualizarBadge(){
-  el('#cartBadge').textContent = carrinho.reduce((t, i) => t + i.qtde, 0);
-}
-
-function toggleCart(){
-  el('#cartSidebar').classList.toggle('open');
-  renderCarrinho();
-}
-
-function remover(id){
-  carrinho = carrinho.filter(i => i.id !== id);
-  atualizarBadge(); renderCarrinho();
-}
-
-function renderCarrinho(){
-  const list = el('#cartItems'); list.innerHTML = '';
-  if (!carrinho.length){ list.innerHTML = '<p>Seu carrinho está vazio.</p>'; el('#cartTotal').textContent = 'R$ 0,00'; return; }
-  carrinho.forEach(item => {
-    const prod = produtos.find(p => p.id === item.id);
-    list.innerHTML += `
-    <div style="display:flex;justify-content:space-between;">
-      <span>${item.qtde}× ${prod.nome}</span>
-      <span>${fmt(item.qtde * prod.preco)}</span>
-      <button onclick="remover(${item.id})" style="border:none;background:none;font-size:1.2rem;">×</button>
-    </div>`;
+function updateBadge(){$('#cartBadge').textContent=cart.reduce((s,i)=>s+i.qty,0);}
+function toggleCart(){$('#cartSidebar').classList.toggle('open');renderCart();}
+function renderCart(){
+  const list=$('#cartItems');list.innerHTML='';
+  if(!cart.length){list.innerHTML='<p>Seu carrinho está vazio.</p>';$('#cartTotal').textContent='R$ 0,00';return;}
+  cart.forEach(i=>{
+    const p=produtos.find(pr=>pr.id===i.id);
+    list.innerHTML+=`<div class="cart-item"><span>${i.qty}× ${p.nome}</span><span>${fmt(i.qty*p.preco)}</span><button style="border:none;background:none;font-size:1.1rem;" onclick="rm(${i.id})">×</button></div>`;
   });
-  const total = carrinho.reduce((s, i) => s + i.qtde * produtos.find(p => p.id === i.id).preco, 0);
-  el('#cartTotal').textContent = fmt(total);
+  const total=cart.reduce((s,i)=>s+i.qty*produtos.find(p=>p.id===i.id).preco,0);
+  $('#cartTotal').textContent=fmt(total);
+}
+function rm(id){cart=cart.filter(i=>i.id!==id);updateBadge();renderCart();}
+
+/* ---------- MODAL UTILS ---------- */
+function openModal(html){$('#modalBox').innerHTML=html;$('#modal').classList.add('active');}
+function closeModal(){$('#modal').classList.remove('active');}
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
+
+/* ---------- LOGIN ---------- */
+function loginScreen(){
+  openModal(`
+    <button class="close-x" onclick="closeModal()">×</button>
+    <h2>Entrar</h2>
+    <form onsubmit="event.preventDefault();user={email:this.email.value};closeModal();">
+      <input name="email" type="email" placeholder="E-mail" required>
+      <input name="senha" type="password" placeholder="Senha" required>
+      <button class="btn-primary" type="submit">Entrar</button>
+      <button type="button" style="background:none;border:none;color:var(--primary);margin-top:6px;" onclick="alert('Link enviado!')">Esqueci minha senha</button>
+      <button type="button" style="background:none;border:none;color:var(--primary);margin-top:6px;" onclick="registerScreen()">Criar cadastro</button>
+    </form>`);
 }
 
-function abrirModal(html){
-  el('#modalBox').innerHTML = html;
-  el('#modal').style.display = 'flex';
-}
-function fecharModal(){
-  el('#modal').style.display = 'none';
-}
-
-el('#modal').addEventListener('click', e => {
-  if (e.target.id === 'modal') fecharModal();
-});
-
-function telaLogin(){
-  abrirModal(`
-    <button onclick="fecharModal()" class="close-x">×</button>
-    <h2>Login</h2>
-    <form onsubmit="event.preventDefault();usuario={email:this.email.value};fecharModal();">
-      <input type="email" name="email" placeholder="E-mail" required>
-      <input type="password" name="senha" placeholder="Senha" required>
-      <button class="buy-button" type="submit">Entrar</button>
-      <button type="button" class="btn-link" onclick="telaCadastro()">Criar cadastro</button>
-      <p style="text-align:right"><button type="button" class="btn-link" onclick="alert('Link de recuperação enviado!')">Esqueci minha senha</button></p>
-    </form>
-  `);
-}
-
-function telaCadastro(){
-  abrirModal(`
-    <button onclick="fecharModal()" class="close-x">×</button>
-    <h2>Cadastro</h2>
-    <form onsubmit="event.preventDefault();usuario={nome:this.nome.value};fecharModal();">
+/* ---------- CADASTRO ---------- */
+function registerScreen(){
+  openModal(`
+    <button class="close-x" onclick="closeModal()">×</button>
+    <h2>Criar conta</h2>
+    <form onsubmit="event.preventDefault();user={nome:this.nome.value};closeModal();">
       <input name="nome" placeholder="Nome completo" required>
       <input name="cpf" placeholder="CPF" required>
-      <input name="nasc" placeholder="Data de nascimento" required>
+      <input name="nasc" type="date" placeholder="Data de nascimento" required>
       <input name="tel" placeholder="Telefone" required>
       <input name="email" type="email" placeholder="E-mail" required>
       <input name="cep" placeholder="CEP" required>
@@ -326,51 +240,63 @@ function telaCadastro(){
       <input name="cidade" placeholder="Cidade" required>
       <input name="estado" placeholder="Estado" required>
       <input name="ref" placeholder="Ponto de referência">
-      <button class="buy-button" type="submit">Concluir cadastro</button>
-    </form>
-  `);
+      <input name="senha" type="password" placeholder="Senha" required>
+      <input name="senha2" type="password" placeholder="Confirmar senha" required>
+      <button class="btn-primary" type="submit">Concluir cadastro</button>
+    </form>`);
 }
 
+/* ---------- CHECKOUT ---------- */
 function iniciarCheckout(){
-  if (!carrinho.length){ alert("Carrinho vazio"); return; }
-  if (!usuario){ telaLogin(); return; }
-
-  const total = carrinho.reduce((s, i) => s + i.qtde * produtos.find(p => p.id === i.id).preco, 0);
-  abrirModal(`
-    <button onclick="fecharModal()" class="close-x">×</button>
-    <h2>Pagamento via Pix</h2>
-    <p>Escaneie o QR Code ou copie o código abaixo.</p>
-    <div id="qrcode"></div>
-    <p>Total: <strong>${fmt(total)}</strong></p>
-    <button class="buy-button" onclick="simularPagamento()">Já paguei</button>
+  if(!cart.length){alert('Carrinho vazio');return;}
+  if(!user){loginScreen();return;}
+  const total=cart.reduce((s,i)=>s+i.qty*produtos.find(p=>p.id===i.id).preco,0);
+  openModal(`
+    <button class="close-x" onclick="closeModal()">×</button>
+    <h2>Pagamento Pix</h2>
+    <p>Escaneie ou copie o código:</p>
+    <div id="qr" style="margin:20px auto;"></div>
+    <p style="text-align:center;font-weight:700">Total: ${fmt(total)}</p>
+    <button class="btn-primary" style="width:100%;margin-top:12px;" onclick="pago()">Já paguei</button>
   `);
-  new QRCode(document.getElementById("qrcode"), {
-    text: `Pagamento no valor de ${fmt(total)}`,
-    width: 200,
-    height: 200
-  });
+  new QRCode(document.getElementById('qr'),{text:`Pagamento de ${fmt(total)}`,width:200,height:200});
+}
+function pago(){
+  cart=[];updateBadge();renderCart();closeModal();statusScreen();
 }
 
-function simularPagamento(){
-  fecharModal(); carrinho = []; atualizarBadge(); renderCarrinho();
-  abrirModal(`
-    <button onclick="fecharModal()" class="close-x">×</button>
-    <h2>Rastreamento do pedido</h2>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;">
-      <div class="step done">Pedido confirmado</div>
-      <div class="step done">Pagamento aprovado</div>
-      <div class="step done">Em separação</div>
-      <div class="step done">Enviado</div>
-      <div class="step done">Entregue</div>
+/* ---------- STATUS ---------- */
+function statusScreen(){
+  openModal(`
+    <button class="close-x" onclick="closeModal()">×</button>
+    <h2>Rastreamento</h2>
+    <div class="status-line" id="line">
+      <div class="step">Confirmado</div><div class="connector"></div>
+      <div class="step">Pago</div><div class="connector"></div>
+      <div class="step">Separação</div><div class="connector"></div>
+      <div class="step">Enviado</div><div class="connector"></div>
+      <div class="step">Entregue</div>
     </div>
-    <p style="text-align:center;color:var(--success);margin-top:20px;"><strong>Pedido finalizado!</strong></p>
+    <p id="statusTxt" style="text-align:center;margin-top:18px;font-weight:600;"></p>
   `);
+  avancarStatus(0);
+}
+function avancarStatus(i){
+  const steps=[...$('#line').querySelectorAll('.step')];
+  const conns=[...$('#line').querySelectorAll('.connector')];
+  steps[i].classList.add('done');
+  if(i>0)conns[i-1].classList.add('done');
+  $('#statusTxt').textContent=steps[i].textContent;
+  if(i<steps.length-1)setTimeout(()=>avancarStatus(i+1),3000);
+  else $('#statusTxt').textContent='Pedido finalizado!';
 }
 
-document.getElementById('cartLink').onclick = e => { e.preventDefault(); toggleCart(); }
-document.getElementById('loginLink').onclick = e => { e.preventDefault(); telaLogin(); }
+/* ---------- EVENTOS ---------- */
+$('#loginLink').onclick=e=>{e.preventDefault();loginScreen();};
+$('#cartLink').onclick=e=>{e.preventDefault();toggleCart();};
 
-montarGrid();
+/* ---------- INIT ---------- */
+buildGrid();updateBadge();
 </script>
 </body>
 </html>
