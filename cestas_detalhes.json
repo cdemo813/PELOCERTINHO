@@ -1,0 +1,131 @@
+[
+  {
+    "id": 1,
+    "nome": "Cesta Básica Casado",
+    "itens": [
+      "2x Arroz TP1 5KG - Namorado",
+      "2x Óleo de Soja 900ML - Liza",
+      "2x Feijão Carioca TP1 1KG - Namorado",
+      "2x Leite Longa Vida 1LT - Piracanjuba",
+      "3x Açúcar Refinado 1KG - Da Barra",
+      "1x Macarrão Parafuso 500G - Dona Benta",
+      "2x Macarrão Spaghetti 500G - Dona Benta",
+      "1x Atum Ralado 170G - Gomes da Costa",
+      "3x Extrato de Tomate 190G - Xavante",
+      "1x Maionese 200G - Vigor",
+      "2x Biscoito Cream Cracker 170G - Marilan",
+      "2x Biscoito Recheado 140G - Bauducco",
+      "1x Leite em Pó Integral 200G - Italac",
+      "1x Achocolatado 350G - Nescau",
+      "2x Gelatina em Pó 20G - Sol",
+      "2x Refresco em Pó 18G - Tang",
+      "1x Farofa 250G - Kisabor",
+      "1x Sal Refinado 1KG - Cisne",
+      "2x Café 500G - Pilão",
+      "1x Farinha de Trigo 1KG - Dona Benta",
+      "1x Caixa de Papelão Reforçada"
+    ]
+  },
+  {
+    "id": 2,
+    "nome": "Cesta Básica Solteiro",
+    "itens": [
+      "1x Arroz TP1 5KG - Namorado",
+      "1x Óleo 900ML - Concordia",
+      "1x Feijão Carioca TP1 1KG - Namorado",
+      "2x Leite Longa Vida 1LT - Piracanjuba",
+      "2x Açúcar Refinado 1KG - Da Barra",
+      "1x Macarrão Parafuso 500G - Dona Benta",
+      "1x Macarrão Spaghetti 500G - Dona Benta",
+      "1x Atum Ralado 170G - Gomes da Costa",
+      "2x Molho de Tomate 300G - Tarantella",
+      "1x Maionese 200G - Saúde",
+      "1x Biscoito Maizena 170G - Bauducco",
+      "1x Biscoito Recheado 140G - Bauducco",
+      "1x Achocolatado 200G - Nescau",
+      "1x Goiabada 200G - Xavante",
+      "2x Refresco em Pó 18G - Tang",
+      "1x Farofa 180G - Mani",
+      "1x Sal Refinado 1KG - 5 Estrelas",
+      "1x Café Vácuo 500G - Pele",
+      "1x Caixa de Papelão Reforçada"
+    ]
+  },
+  {
+    "id": 3,
+    "nome": "Cesta Básica Dia a Dia",
+    "itens": [
+      "2x Arroz TP1 5KG - Namorado",
+      "2x Óleo de Soja 900ML - Liza",
+      "2x Feijão Carioca TP1 1KG - Namorado",
+      "2x Açúcar Refinado 1KG - Da Barra",
+      "1x Macarrão Spaghetti 500G - Dona Benta",
+      "1x Extrato de Tomate 190G - Xavante",
+      "1x Maionese 200G - Vigor",
+      "1x Biscoito Cream Cracker 170G - Bauducco",
+      "1x Achocolatado 200G - Milko",
+      "1x Gelatina em Pó 20G - Sol",
+      "1x Farinha de Mandioca 500G - Mana",
+      "1x Café Vácuo 500G - Pele",
+      "1x Sal Refinado 1KG - 5 Estrelas",
+      "1x Farinha de Trigo 1KG - Globo",
+      "1x Caixa de Papelão Reforçada"
+    ]
+  },
+  {
+    "id": 4,
+    "nome": "Cesta Básica Econômica",
+    "itens": [
+      "1x Arroz TP1 5KG - Grão Nobre",
+      "1x Óleo de Soja 900ML - Concordia",
+      "1x Feijão Carioca TP1 1KG - Tio Pedro",
+      "1x Açúcar Refinado 1KG - Mirante",
+      "1x Macarrão Spaghetti C/Ovos 500G - Joia",
+      "1x Molho de Tomate 300G - D'Mada",
+      "1x Gelatina em Pó 20G - Sol",
+      "1x Biscoito Maizena 170G - Bauducco",
+      "1x Leite em Pó 200G (Composto Alimentar) - Milko",
+      "1x Achocolatado 200G - Milko",
+      "1x Fubá 500G - Corradini",
+      "1x Farinha de Mandioca 500G - Mana",
+      "1x Sal Refinado 1KG - 5 Estrelas",
+      "1x Café Vácuo 250G - Seleto",
+      "1x Farinha de Trigo 1KG - Amizade",
+      "1x Caixa de Papelão Reforçada"
+    ]
+  },
+  {
+    "id": 5,
+    "nome": "Cesta Básica Doação",
+    "itens": [
+      "1x Arroz TP1 5KG - Grão Nobre",
+      "1x Óleo de Soja 900ML - Concordia",
+      "1x Feijão Carioca TP1 1KG - Tio Pedro",
+      "1x Açúcar Refinado 1KG - Mirante",
+      "1x Macarrão Spaghetti 500G - Joia",
+      "1x Extrato de Tomate 190G - Xavante",
+      "1x Fubá 500G - Corradini",
+      "1x Farinha de Mandioca 500G - Mana",
+      "1x Sal Refinado 1KG - 5 Estrelas",
+      "1x Café Almofada 250G - Serra da Boa Esperança",
+      "1x Farinha de Trigo 1KG - Amizade",
+      "1x Caixa de Papelão Reforçada"
+    ]
+  },
+  {
+    "id": 6,
+    "nome": "Kit Generosidade",
+    "itens": [
+      "2x Arroz TP1 1KG - Namorado",
+      "1x Feijão Carioca 1KG - Tio Pedro",
+      "1x Óleo de Soja 900ML - Concordia",
+      "1x Açúcar 1KG - Mirante",
+      "1x Fubá 500G - Corradini",
+      "1x Café Almofada 250G - Serra Boa Esperança",
+      "1x Extrato de Tomate 140G - Xavante",
+      "1x Macarrão Spaghetti C/Ovos 500G - Joia",
+      "1x Refresco em Pó 20G - Fruitsy",
+      "1x Caixa de Papelão Reforçada"
+    ]
+  }
+]
