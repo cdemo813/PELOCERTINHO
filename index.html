@@ -219,5 +219,68 @@ $('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();}
 /* ---------------- INIT ---------------- */
 buildGrid();updateBadge();
 </script>
+  <div style="max-width:400px;margin:40px auto;padding:20px;background:#fff;border-radius:8px;box-shadow:0 0 10px rgba(0,0,0,.1)">
+  <h2>Pagamento por Cartão</h2>
+  <label>Número do cartão:</label><br>
+  <input id="cc-num" type="text" style="width:100%;padding:8px"><br><br>
+
+  <label>Nome do titular:</label><br>
+  <input id="cc-name" type="text" style="width:100%;padding:8px"><br><br>
+
+  <label>Validade (MM/AA):</label><br>
+  <input id="cc-exp" type="text" placeholder="MM/AA" style="width:100%;padding:8px"><br><br>
+
+  <label>CVV:</label><br>
+  <input id="cc-cvv" type="text" style="width:100%;padding:8px"><br><br>
+
+  <button onclick="verificarCartao()" style="padding:10px 20px;background:#28a745;color:#fff;border:none;border-radius:5px">Verificar</button>
+  <p id="cc-result" style="margin-top:15px;font-weight:bold"></p>
+</div>
+
+<script>
+function luhn(val) {
+  val = val.replace(/\D/g, '');
+  let sum = 0, alt = false;
+  for (let i = val.length - 1; i >= 0; i--) {
+    let n = parseInt(val.charAt(i));
+    if (alt) {
+      n *= 2;
+      if (n > 9) n -= 9;
+    }
+    sum += n;
+    alt = !alt;
+  }
+  return (sum % 10 == 0);
+}
+
+function nomeValido(nome) {
+  return /^[A-Za-zÀ-ÿ' ]{2,26}$/.test(nome.trim());
+}
+
+function validadeValida(data) {
+  if (!/^\d{2}\/\d{2}$/.test(data)) return false;
+  let [mes, ano] = data.split('/').map(Number);
+  if (mes < 1 || mes > 12) return false;
+  let agora = new Date();
+  let val = new Date(2000 + ano, mes);
+  return val > agora;
+}
+
+function cvvValido(cvv) {
+  return /^\d{3,4}$/.test(cvv.trim());
+}
+
+function verificarCartao() {
+  const num = document.getElementById("cc-num").value;
+  const nome = document.getElementById("cc-name").value;
+  const val = document.getElementById("cc-exp").value;
+  const cvv = document.getElementById("cc-cvv").value;
+
+  const valido = luhn(num) && nomeValido(nome) && validadeValida(val) && cvvValido(cvv);
+  const resultado = document.getElementById("cc-result");
+  resultado.innerText = valido ? "✅ Cartão válido!" : "❌ Cartão inválido.";
+  resultado.style.color = valido ? "green" : "red";
+}
+</script>
 </body>
 </html>
