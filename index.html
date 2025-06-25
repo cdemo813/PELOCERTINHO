@@ -1,86 +1,146 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Loja de Cestas Básicas - Checkout</title>
-  <style>
-    body { font-family: sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
-    h1, h2 { text-align: center; }
-    .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,.1); }
-    input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; }
-    button { background: #28a745; color: white; padding: 12px; border: none; width: 100%; border-radius: 5px; font-size: 16px; cursor: pointer; }
-    button:hover { background: #218838; }
-    #cc-result { margin-top: 15px; font-weight: bold; text-align: center; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cestas Básicas</title>
+<style>
+:root{--pri:#007bff;--ok:#28a745;--bg:#f5f5f5;--rad:8px;--sh:0 3px 10px rgba(0,0,0,.12)}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
+body{background:var(--bg)}
+header{background:var(--pri);color:#fff;padding:18px;display:flex;justify-content:space-between;align-items:center}
+header a{color:#fff;text-decoration:none;font-size:1.2rem;margin-left:20px;position:relative}
+.badge{position:absolute;top:-6px;right:-10px;background:var(--ok);padding:0 6px;border-radius:9999px;font-size:.75rem}
+.grid{max-width:1200px;margin:30px auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;padding:0 18px}
+.card{background:#fff;border-radius:var(--rad);box-shadow:var(--sh);overflow:hidden;cursor:pointer;transition:.25s}
+.card:hover{transform:translateY(-4px)}
+.card img{width:100%}
+.card h3{padding:10px;font-size:1rem}
+.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:300}
+.modal.show{display:flex}
+.box{background:#fff;padding:26px;border-radius:var(--rad);box-shadow:var(--sh);max-width:500px;width:92%;max-height:90vh;overflow:auto;position:relative}
+.close{position:absolute;top:10px;right:14px;font-size:1.5rem;border:none;background:none;cursor:pointer}
+ul{padding-left:20px;margin-top:8px}
+.controls{margin:14px 0;display:flex;align-items:center;gap:8px}
+.controls input{width:44px;text-align:center}
+.btn{display:block;width:100%;padding:12px;border:none;border-radius:var(--rad);font-weight:600;cursor:pointer;margin-top:14px}
+.btn-buy{background:var(--ok);color:#fff}
+.btn-main{background:var(--pri);color:#fff}
+#cart{position:fixed;top:0;right:-420px;width:380px;height:100%;background:#fff;box-shadow:-4px 0 14px rgba(0,0,0,.15);transition:right .35s;display:flex;flex-direction:column;z-index:200}
+#cart.open{right:0}
+.cart-h,.cart-f{padding:18px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+.cart-items{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px}
+.cart-f{border-top:1px solid #eee;border-bottom:none;flex-direction:column;gap:16px}
+.cart-f .total{display:flex;justify-content:space-between;width:100%;font-weight:700}
+input[type=radio]{margin-right:6px}
+fieldset{border:1px solid #ddd;margin:14px 0;padding:10px;border-radius:var(--rad)}
+fieldset legend{padding:0 6px}
+fieldset.hidden{display:none}
+</style>
 </head>
 <body>
+<header>
+  <h1>Cestas Básicas</h1>
+  <div>
+    <a id="loginLink" href="#">👤</a>
+    <a id="cartLink" href="#">🛒<span id="badge" class="badge">0</span></a>
+  </div>
+</header>
 
-<div class="container">
-  <h1>Finalizar Compra</h1>
-  <h2>Pagamento por Cartão de Crédito</h2>
-  
-  <label>Número do Cartão:</label>
-  <input id="cc-num" type="text" placeholder="0000 0000 0000 0000" />
+<section id="grid" class="grid"></section>
 
-  <label>Nome do Titular:</label>
-  <input id="cc-name" type="text" placeholder="Nome completo como no cartão" />
+<!-- modal detalhe / checkout -->
+<div id="modal" class="modal"><div id="modalBox" class="box"></div></div>
 
-  <label>Validade (MM/AA):</label>
-  <input id="cc-exp" type="text" placeholder="MM/AA" />
+<!-- carrinho -->
+<aside id="cart">
+  <div class="cart-h"><h2>Carrinho</h2><button class="close" onclick="toggleCart()">×</button></div>
+  <div id="cartItems" class="cart-items"></div>
+  <div class="cart-f">
+    <div class="total"><span>Total</span><span id="cartTotal">R$ 0,00</span></div>
+    <button class="btn btn-main" onclick="checkout()">Finalizar compra</button>
+  </div>
+</aside>
 
-  <label>CVV:</label>
-  <input id="cc-cvv" type="text" placeholder="3 ou 4 dígitos" />
-
-  <button onclick="verificarCartao()">Verificar Cartão</button>
-  <p id="cc-result"></p>
-</div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-function luhn(val) {
-  val = val.replace(/\D/g, '');
-  let sum = 0, alt = false;
-  for (let i = val.length - 1; i >= 0; i--) {
-    let n = parseInt(val.charAt(i));
-    if (alt) {
-      n *= 2;
-      if (n > 9) n -= 9;
-    }
-    sum += n;
-    alt = !alt;
-  }
-  return (sum % 10 == 0);
+/* ------- dados -------- */
+const FRETE = 19.90;
+const cestas = [
+ {id:1,nome:"Cesta Casado",preco:89.99},
+ {id:2,nome:"Cesta Solteiro",preco:79.99},
+ {id:3,nome:"Cesta Dia a Dia",preco:69.99},
+ {id:4,nome:"Cesta Econômica",preco:59.99},
+ {id:5,nome:"Cesta Doação",preco:49.99},
+ {id:6,nome:"Kit Generosidade",preco:39.99}
+];
+/* ------- helpers ------- */
+const $=s=>document.querySelector(s),fmt=v=>'R$ '+v.toFixed(2).replace('.',',');
+/* ------- estado ------- */
+let cart=[];
+/* ------- grid ------- */
+cestas.forEach(c=>{grid.insertAdjacentHTML('beforeend',
+ `<div class="card" onclick="addCart(${c.id})"><img src="cesta-exemplo.jpg"><h3>${c.nome} – ${fmt(c.preco)}</h3></div>`);});
+/* ------- carrinho ------- */
+function addCart(id){
+ const obj=cart.find(i=>i.id===id); obj?obj.q++:cart.push({id,q:1});
+ badge.textContent=cart.reduce((s,i)=>s+i.q,0);
+ renderCart(); toggleCart();
 }
-
-function nomeValido(nome) {
-  return /^[A-Za-zÀ-ÿ' ]{2,26}$/.test(nome.trim());
+function toggleCart(){$('#cart').classList.toggle('open');renderCart();}
+function renderCart(){
+ cartItems.innerHTML='';
+ if(!cart.length){cartItems.innerHTML='<p>Carrinho vazio.</p>';cartTotal.textContent='R$ 0,00';return;}
+ cart.forEach(i=>{
+   const c=cestas.find(x=>x.id===i.id);
+   cartItems.insertAdjacentHTML('beforeend',`<div style="display:flex;justify-content:space-between"><span>${i.q}× ${c.nome}</span><span>${fmt(i.q*c.preco)}</span></div>`);
+ });
+ const total=cart.reduce((s,i)=>s+i.q*cestas.find(x=>x.id===i.id).preco,0)+FRETE;
+ cartTotal.textContent=fmt(total);
 }
+/* ------- checkout ------- */
+function checkout(){
+ if(!cart.length){alert('Carrinho vazio');return;}
+ const total=parseFloat(cartTotal.textContent.replace('R$','').replace(',','.'));
+ modalBox.innerHTML=`
+  <button class="close" onclick="closeM()">×</button>
+  <h2>Pagamento</h2>
+  <p>Total a pagar: <strong>${fmt(total)}</strong> (frete ${fmt(FRETE)} incluso)</p>
+  <label><input type="radio" name="pg" value="pix" checked onchange="togglePay()"> Pix</label>
+  <label><input type="radio" name="pg" value="card" onchange="togglePay()"> Cartão</label>
 
-function validadeValida(data) {
-  if (!/^\d{2}\/\d{2}$/.test(data)) return false;
-  let [mes, ano] = data.split('/').map(Number);
-  if (mes < 1 || mes > 12) return false;
-  let agora = new Date();
-  let val = new Date(2000 + ano, mes);
-  return val > agora;
+  <fieldset id="pixBox"><legend>QR-Code Pix</legend><div id="qr"></div></fieldset>
+
+  <fieldset id="cardBox" class="hidden"><legend>Dados do cartão</legend>
+     <input id="cc-num" placeholder="Número do cartão"><br>
+     <input id="cc-name" placeholder="Nome do titular"><br>
+     <input id="cc-exp" placeholder="MM/AA"><br>
+     <input id="cc-cvv" placeholder="CVV (3 ou 4)"><br>
+  </fieldset>
+
+  <button class="btn btn-main" onclick="finalizar(${total})">Finalizar compra</button>`;
+ new QRCode($('#qr'),{text:'PIX '+fmt(total),width:180,height:180});
+ modal.classList.add('show');
 }
-
-function cvvValido(cvv) {
-  return /^\d{3,4}$/.test(cvv.trim());
+function togglePay(){
+ const pg=[...document.querySelectorAll('input[name=pg]')].find(r=>r.checked).value;
+ $('#pixBox').classList.toggle('hidden',pg!=='pix');
+ $('#cardBox').classList.toggle('hidden',pg!=='card');
 }
-
-function verificarCartao() {
-  const num = document.getElementById("cc-num").value;
-  const nome = document.getElementById("cc-name").value;
-  const val = document.getElementById("cc-exp").value;
-  const cvv = document.getElementById("cc-cvv").value;
-
-  const valido = luhn(num) && nomeValido(nome) && validadeValida(val) && cvvValido(cvv);
-  const resultado = document.getElementById("cc-result");
-  resultado.innerText = valido ? "✅ Cartão válido! Pagamento pode ser processado." : "❌ Cartão inválido. Verifique os dados.";
-  resultado.style.color = valido ? "green" : "red";
+function finalizar(total){
+ const pg=[...document.querySelectorAll('input[name=pg]')].find(r=>r.checked).value;
+ if(pg==='card' && !validaCartao()) return;
+ cart=[];badge.textContent='0';renderCart();closeM();alert('Pedido confirmado! Valor '+fmt(total));
 }
+function validaCartao(){
+ const n=$('#cc-num').value, nm=$('#cc-name').value, ex=$('#cc-exp').value, cv=$('#cc-cvv').value;
+ if(!(luhn(n)&&/^[A-Za-zÀ-ÿ' ]{2,26}$/.test(nm.trim())&&/^\d{2}\/\d{2}$/.test(ex)&&/^\d{3,4}$/.test(cv))){
+   alert('Dados de cartão inválidos');return false;} return true;}
+/* ------- utils ------- */
+function luhn(v){v=v.replace(/\D/g,'');let s=0,a=false;for(let i=v.length-1;i>=0;i--){let n=parseInt(v[i]);if(a){n*=2;if(n>9)n-=9;}s+=n;a=!a;}return s%10==0;}
+function closeM(){modal.classList.remove('show');}
+modal.onclick=e=>{if(e.target.id==='modal')closeM();}
+cartLink.onclick=e=>{e.preventDefault();toggleCart();}
 </script>
-
 </body>
 </html>
